@@ -12,7 +12,12 @@
           "package_name": "com.example.campus_hub"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1076087169316-g5papk5ti1e1c2b0uobhptl9rjhttvfl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD5InqARuZgM__MfHL4Hgy2dVXyuqzw1gM"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076087169316-g5papk5ti1e1c2b0uobhptl9rjhttvfl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1076087169316-avkl3ogu38ajen156oq8n5t9jmrvhsor.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.campusHub"
+              }
+            }
+          ]
         }
       }
     }

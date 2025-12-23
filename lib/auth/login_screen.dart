@@ -250,9 +250,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _isLoading ? null : _handleLogin,
+                  onPressed: () {
+                    if (!_isLoading) {
+                      _handleLogin();
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2196F3),
+                    disabledBackgroundColor: const Color(
+                      0xFF2196F3,
+                    ).withOpacity(0.6),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -299,7 +306,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 56,
                 child: OutlinedButton.icon(
-                  onPressed: _isLoading ? null : _handleGoogleSignIn,
+                  onPressed: () {
+                    if (!_isLoading) {
+                      _handleGoogleSignIn();
+                    }
+                  },
                   icon: SvgPicture.asset('G.svg', width: 24, height: 24),
                   label: const Text(
                     'Continue with Google',
