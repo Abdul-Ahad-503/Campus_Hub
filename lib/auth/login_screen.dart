@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'register_screen.dart';
 import 'auth_service.dart';
-import '../screens/home_screen.dart';
+import '../screens/main_navigation.dart';
 import '../utils/notification_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
           NotificationService.showSuccess(context, 'Login successful');
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => const MainNavigation()),
             (route) => false,
           );
         } else {
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
           NotificationService.showSuccess(context, 'Google sign-in successful');
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => const MainNavigation()),
             (route) => false,
           );
         } else {

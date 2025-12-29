@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'login_screen.dart';
 import 'auth_service.dart';
-import '../screens/home_screen.dart';
+import '../screens/main_navigation.dart';
 import '../utils/notification_service.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -106,7 +106,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           NotificationService.showSuccess(context, 'Registration successful');
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => const MainNavigation()),
             (route) => false,
           );
         } else {
