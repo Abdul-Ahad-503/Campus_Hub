@@ -196,7 +196,14 @@ class AuthService {
 
   // Logout
   Future<void> logout() async {
-    await _googleSignIn.signOut();
+    try {
+      // Try to sign out from Google Sign-In (ignore errors if not signed in with Google)
+      await _googleSignIn.signOut();
+    } catch (e) {
+      // Ignore Google Sign-In errors (user might not be signed in with Google)
+      print('Google Sign-In logout error (ignored): $e');
+    }
+    // Always sign out from Firebase Auth
     await _auth.signOut();
   }
 
