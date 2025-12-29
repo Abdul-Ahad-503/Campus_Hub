@@ -44,15 +44,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _skipToLogin() async {
-    // Mark onboarding as seen
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('hasSeenOnboarding', true);
+    try {
+      // Mark onboarding as seen
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('hasSeenOnboarding', true);
 
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
+      if (mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      print('Error navigating to login: $e');
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      }
     }
   }
 
