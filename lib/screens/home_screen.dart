@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../auth/auth_service.dart';
-import '../auth/login_screen.dart';
-import '../utils/notification_service.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -12,7 +11,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final AuthService _authService = AuthService();
-  String _userName = 'User';
+  String userName = '';
   bool _isLoading = true;
 
   @override
@@ -25,213 +24,299 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final user = _authService.currentUser;
       if (user != null) {
-        final userData = await _authService.getUserData(user.uid);
-        if (userData != null && mounted) {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (userDoc.exists && mounted) {
           setState(() {
-            _userName = userData['fullName'] ?? user.displayName ?? 'User';
-            _isLoading = false;
-          });
-        } else if (mounted) {
-          setState(() {
-            _userName = user.displayName ?? 'User';
+            userName = userDoc.data()?['fullName'] ?? 'Student';
             _isLoading = false;
           });
         }
-      } else if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
+          userName = 'Student';
           _isLoading = false;
         });
-      }
-    }
-  }
-
-  Future<void> _handleLogout() async {
-    try {
-      NotificationService.showLoading(context, message: 'Signing out...');
-      
-      await _authService.logout();
-      
-      if (mounted) {
-        NotificationService.hideLoading(context);
-        NotificationService.showSuccess(context, 'Logged out successfully');
-        
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-          (route) => false,
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        NotificationService.hideLoading(context);
-        NotificationService.showError(context, 'Failed to logout');
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF2196F3),
+        backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
-          'CampusHub',
+          'Campus Hub',
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
+            color: Colors.black87,
             fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
+        centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: Colors.white),
+            icon: const Icon(
+              Icons.notifications_outlined,
+              color: Colors.black87,
+            ),
             onPressed: () {
-              // TODO: Navigate to notifications
+              _showComingSoonMessage(
+                'Notifications feature is under development',
+              );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white),
-            onPressed: _handleLogout,
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              radius: 18,
+              backgroundColor: const Color(0xFF2196F3),
+              child: Text(
+                _isLoading ? '?' : _getInitials(userName),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header Section
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24.0),
-              decoration: const BoxDecoration(
-                color: Color(0xFF2196F3),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Greeting Section
+                    Text(
+                      'Hello, $userName! 👋',
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'What would you like to do today?',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Feature Cards Grid
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 1.1,
+                      children: [
+                        _buildFeatureCard(
+                          icon: Icons.search,
+                          title: 'Lost Items',
+                          color: const Color(0xFF2196F3),
+                          onTap: () {
+                            _showComingSoonMessage(
+                              'Lost Items feature is under development',
+                            );
+                          },
+                        ),
+                        _buildFeatureCard(
+                          icon: Icons.inventory_2,
+                          title: 'Found Items',
+                          color: const Color(0xFF4CAF50),
+                          onTap: () {
+                            _showComingSoonMessage(
+                              'Found Items feature is under development',
+                            );
+                          },
+                        ),
+                        _buildFeatureCard(
+                          icon: Icons.campaign,
+                          title: 'Notice Board',
+                          color: const Color(0xFFFF9800),
+                          onTap: () {
+                            _showComingSoonMessage(
+                              'Notice Board feature is under development',
+                            );
+                          },
+                        ),
+                        _buildFeatureCard(
+                          icon: Icons.article,
+                          title: 'Events Details',
+                          color: const Color(0xFF9C27B0),
+                          onTap: () {
+                            _showComingSoonMessage(
+                              'Events Details feature is under development',
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // Recent Notices Section
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Recent Notices',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            _showComingSoonMessage(
+                              'View all notices feature is under development',
+                            );
+                          },
+                          child: const Text('See All'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Notice Items
+                    _buildNoticeItem(
+                      title: 'Semester Final Exams Schedule',
+                      time: '2 hours ago',
+                      icon: Icons.event_note,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildNoticeItem(
+                      title: 'Library Hours Extended',
+                      time: '5 hours ago',
+                      icon: Icons.access_time,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildNoticeItem(
+                      title: 'Sports Day Registration Open',
+                      time: '1 day ago',
+                      icon: Icons.sports_basketball,
+                    ),
+                  ],
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Welcome back,',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _userName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
             ),
-            const SizedBox(height: 24),
-            // Quick Actions Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Quick Actions',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    children: [
-                      _buildActionCard(
-                        icon: Icons.search,
-                        title: 'Find Lost Items',
-                        color: Colors.blue,
-                        onTap: () {
-                          // TODO: Navigate to lost items
-                        },
-                      ),
-                      _buildActionCard(
-                        icon: Icons.event,
-                        title: 'Events',
-                        color: Colors.orange,
-                        onTap: () {
-                          // TODO: Navigate to events
-                        },
-                      ),
-                      _buildActionCard(
-                        icon: Icons.article,
-                        title: 'Campus News',
-                        color: Colors.green,
-                        onTap: () {
-                          // TODO: Navigate to news
-                        },
-                      ),
-                      _buildActionCard(
-                        icon: Icons.person,
-                        title: 'Profile',
-                        color: Colors.purple,
-                        onTap: () {
-                          // TODO: Navigate to profile
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'Recent Updates',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildUpdateCard(
-                    icon: Icons.info,
-                    title: 'Welcome to CampusHub',
-                    subtitle: 'Your complete university companion',
-                    time: 'Just now',
-                  ),
-                  const SizedBox(height: 24),
-                ],
-              ),
+    );
+  }
+
+  String _getInitials(String name) {
+    if (name.isEmpty) return '?';
+    final parts = name.trim().split(' ');
+    if (parts.length == 1) {
+      return parts[0][0].toUpperCase();
+    }
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  void _showComingSoonMessage(String feature) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                const Color(0xFF2196F3).withOpacity(0.95),
+                const Color(0xFF1976D2).withOpacity(0.95),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-          ],
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF2196F3).withOpacity(0.4),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.access_time_rounded,
+                  size: 48,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Coming Soon!',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                feature,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white.withOpacity(0.9),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF2196F3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  elevation: 0,
+                ),
+                child: const Text(
+                  'Got it!',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildActionCard({
+  Widget _buildFeatureCard({
     required IconData icon,
     required String title,
     required Color color,
@@ -244,25 +329,22 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: color.withOpacity(0.3),
-            width: 1,
-          ),
+          border: Border.all(color: color.withOpacity(0.3), width: 1.5),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 48,
-              color: color,
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              child: Icon(icon, size: 32, color: Colors.white),
             ),
             const SizedBox(height: 12),
             Text(
               title,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: color,
               ),
@@ -273,35 +355,27 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildUpdateCard({
-    required IconData icon,
+  Widget _buildNoticeItem({
     required String title,
-    required String subtitle,
     required String time,
+    required IconData icon,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1,
-        ),
+        border: Border.all(color: Colors.grey.shade200, width: 1),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: const Color(0xFF2196F3).withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              icon,
-              color: const Color(0xFF2196F3),
-              size: 24,
-            ),
+            child: Icon(icon, color: const Color(0xFF2196F3), size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -311,29 +385,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: Colors.black87,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
-                  ),
+                  time,
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                 ),
               ],
             ),
           ),
-          Text(
-            time,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade500,
-            ),
-          ),
+          Icon(Icons.chevron_right, color: Colors.grey.shade400),
         ],
       ),
     );

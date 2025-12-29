@@ -3,6 +3,7 @@ import 'home_screen.dart';
 import 'notice_screen.dart';
 import 'news_screen.dart';
 import 'profile_screen.dart';
+import 'post_lost_item_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -27,10 +28,10 @@ class _MainNavigationState extends State<MainNavigation> {
       body: _screens[_currentIndex],
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Add action for the center button
-          ScaffoldMessenger.of(
+          Navigator.push(
             context,
-          ).showSnackBar(const SnackBar(content: Text('Add new item')));
+            MaterialPageRoute(builder: (context) => const PostLostItemScreen()),
+          );
         },
         backgroundColor: const Color(0xFF2196F3),
         child: const Icon(Icons.add, color: Colors.white, size: 32),

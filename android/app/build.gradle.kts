@@ -43,6 +43,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        
+        // For permission_handler
+        multiDexEnabled = true
     }
 
     buildTypes {
