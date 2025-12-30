@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
 import 'post_lost_item_screen.dart';
 import 'post_found_item_screen.dart';
 
@@ -529,8 +530,8 @@ class _LostAndFoundScreenState extends State<LostAndFoundScreen>
                   topRight: Radius.circular(12),
                 ),
                 child: imageUrl != null
-                    ? Image.network(
-                        imageUrl,
+                    ? Image.memory(
+                        base64Decode(imageUrl),
                         height: 120,
                         width: double.infinity,
                         fit: BoxFit.cover,

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
+import 'dart:convert';
 
 class PostLostItemScreen extends StatefulWidget {
   const PostLostItemScreen({Key? key}) : super(key: key);
@@ -148,21 +148,14 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
     }
   }
 
-  Future<String?> _uploadImage(File image) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      throw Exception('User not logged in');
+  Future<String?> _convertImageToBase64(File image) async {
+    try {
+      final bytes = await image.readAsBytes();
+      final base64String = base64Encode(bytes);
+      return base64String;
+    } catch (e) {
+      throw Exception('Failed to process image: $e');
     }
-
-    final fileName = '${DateTime.now().millisecondsSinceEpoch}_${user.uid}.jpg';
-    final storageRef = FirebaseStorage.instance
-        .ref()
-        .child('lost_items')
-        .child(fileName);
-
-    await storageRef.putFile(image);
-    final downloadUrl = await storageRef.getDownloadURL();
-    return downloadUrl;
   }
 
   Future<void> _submitForm() async {
@@ -186,9 +179,9 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
         final userData = userDoc.data();
         String? imageUrl;
 
-        // Upload image if exists
+        // Convert image to base64 if exists
         if (_selectedImage != null) {
-          imageUrl = await _uploadImage(_selectedImage!);
+          imageUrl = await _convertImageToBase64(_selectedImage!);
         }
 
         // Create lost item document

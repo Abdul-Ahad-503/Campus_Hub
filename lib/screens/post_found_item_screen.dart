@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
+import 'dart:convert';
 
 class PostFoundItemScreen extends StatefulWidget {
   const PostFoundItemScreen({Key? key}) : super(key: key);
@@ -148,21 +148,14 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
     }
   }
 
-  Future<String?> _uploadImage(File image) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      throw Exception('User not logged in');
+  Future<String?> _convertImageToBase64(File image) async {
+    try {
+      final bytes = await image.readAsBytes();
+      final base64String = base64Encode(bytes);
+      return base64String;
+    } catch (e) {
+      throw Exception('Failed to process image: $e');
     }
-
-    final fileName = '${DateTime.now().millisecondsSinceEpoch}_${user.uid}.jpg';
-    final storageRef = FirebaseStorage.instance
-        .ref()
-        .child('found_items')
-        .child(fileName);
-
-    await storageRef.putFile(image);
-    final downloadUrl = await storageRef.getDownloadURL();
-    return downloadUrl;
   }
 
   Future<void> _submitForm() async {
@@ -195,10 +188,10 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
 
         final userData = userDoc.data();
 
-        // Upload image (required for found items)
-        final imageUrl = await _uploadImage(_selectedImage!);
+        // Convert image to base64 (required for found items)
+        final imageUrl = await _convertImageToBase64(_selectedImage!);
         if (imageUrl == null) {
-          throw Exception('Failed to upload image');
+          throw Exception('Failed to process image');
         }
 
         // Create found item document
