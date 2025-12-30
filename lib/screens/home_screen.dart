@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../auth/auth_service.dart';
+import 'lost_and_found_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -132,8 +133,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: 'Lost Items',
                           color: const Color(0xFF2196F3),
                           onTap: () {
-                            _showComingSoonMessage(
-                              'Lost Items feature is under development',
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LostAndFoundScreen(
+                                  initialTabIndex: 0,
+                                ),
+                              ),
                             );
                           },
                         ),
@@ -142,8 +148,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: 'Found Items',
                           color: const Color(0xFF4CAF50),
                           onTap: () {
-                            _showComingSoonMessage(
-                              'Found Items feature is under development',
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LostAndFoundScreen(
+                                  initialTabIndex: 1,
+                                ),
+                              ),
                             );
                           },
                         ),
