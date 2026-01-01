@@ -101,19 +101,44 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
         final userData = userDoc.data();
 
         // Create notice document
-        await FirebaseFirestore.instance.collection('notices').add({
-          'category': _selectedCategory,
-          'title': _titleController.text.trim(),
-          'description': _descriptionController.text.trim(),
-          'date': DateFormat('MMM dd, yyyy').format(_selectedDate!),
-          'timestamp': Timestamp.fromDate(_selectedDate!),
-          'department': _selectedDepartment,
-          'userId': user.uid,
-          'userName': userData?['fullName'] ?? 'Unknown',
-          'userEmail': user.email ?? '',
-          'createdAt': FieldValue.serverTimestamp(),
-          'status': 'active',
-        });
+        final noticeRef = await FirebaseFirestore.instance
+            .collection('notices')
+            .add({
+              'category': _selectedCategory,
+              'title': _titleController.text.trim(),
+              'description': _descriptionController.text.trim(),
+              'date': DateFormat('MMM dd, yyyy').format(_selectedDate!),
+              'timestamp': Timestamp.fromDate(_selectedDate!),
+              'department': _selectedDepartment,
+              'userId': user.uid,
+              'userName': userData?['fullName'] ?? 'Unknown',
+              'userEmail': user.email ?? '',
+              'createdAt': FieldValue.serverTimestamp(),
+              'status': 'active',
+            });
+
+        // Get all users to send notifications
+        final usersSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .get();
+
+        // Create notification for each user
+        final batch = FirebaseFirestore.instance.batch();
+        for (var userDoc in usersSnapshot.docs) {
+          final notificationRef = FirebaseFirestore.instance
+              .collection('notifications')
+              .doc();
+          batch.set(notificationRef, {
+            'userId': userDoc.id,
+            'title': 'New Notice: $_selectedCategory',
+            'description': _titleController.text.trim(),
+            'type': 'exam',
+            'isRead': false,
+            'createdAt': FieldValue.serverTimestamp(),
+            'relatedId': noticeRef.id,
+          });
+        }
+        await batch.commit();
 
         setState(() {
           _isSubmitting = false;

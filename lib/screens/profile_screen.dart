@@ -160,14 +160,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined, color: Colors.black87),
-            onPressed: () {
-              // TODO: Navigate to settings
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(

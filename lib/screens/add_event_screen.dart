@@ -215,20 +215,46 @@ class _AddEventScreenState extends State<AddEventScreen> {
         }
 
         // Create event document
-        await FirebaseFirestore.instance.collection('events').add({
-          'category': _selectedCategory,
-          'title': _titleController.text.trim(),
-          'description': _descriptionController.text.trim(),
-          'society': _societyController.text.trim(),
-          'date': DateFormat('MMM dd, yyyy').format(_selectedDate!),
-          'eventDate': Timestamp.fromDate(_selectedDate!),
-          'imageUrl': imageUrl,
-          'userId': user.uid,
-          'userName': userData?['fullName'] ?? 'Unknown',
-          'userEmail': user.email ?? '',
-          'createdAt': FieldValue.serverTimestamp(),
-          'status': 'active',
-        });
+        final eventRef = await FirebaseFirestore.instance
+            .collection('events')
+            .add({
+              'category': _selectedCategory,
+              'title': _titleController.text.trim(),
+              'description': _descriptionController.text.trim(),
+              'society': _societyController.text.trim(),
+              'date': DateFormat('MMM dd, yyyy').format(_selectedDate!),
+              'eventDate': Timestamp.fromDate(_selectedDate!),
+              'imageUrl': imageUrl,
+              'userId': user.uid,
+              'userName': userData?['fullName'] ?? 'Unknown',
+              'userEmail': user.email ?? '',
+              'createdAt': FieldValue.serverTimestamp(),
+              'status': 'active',
+            });
+
+        // Get all users to send notifications
+        final usersSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .get();
+
+        // Create notification for each user
+        final batch = FirebaseFirestore.instance.batch();
+        for (var userDoc in usersSnapshot.docs) {
+          final notificationRef = FirebaseFirestore.instance
+              .collection('notifications')
+              .doc();
+          batch.set(notificationRef, {
+            'userId': userDoc.id,
+            'title': 'New Event: $_selectedCategory',
+            'description':
+                '${_societyController.text.trim()} - ${_titleController.text.trim()}',
+            'type': 'event',
+            'isRead': false,
+            'createdAt': FieldValue.serverTimestamp(),
+            'relatedId': eventRef.id,
+          });
+        }
+        await batch.commit();
 
         setState(() {
           _isSubmitting = false;

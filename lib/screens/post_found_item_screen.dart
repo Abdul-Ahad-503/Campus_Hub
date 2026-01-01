@@ -195,19 +195,33 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
         }
 
         // Create found item document
-        await FirebaseFirestore.instance.collection('found_items').add({
-          'title': _titleController.text.trim(),
-          'description': _descriptionController.text.trim(),
-          'location': _locationController.text.trim(),
-          'dateFound': Timestamp.fromDate(_selectedDate!),
-          'estimatedTime': _estimatedTimeController.text.trim(),
-          'contactNumber': _contactController.text.trim(),
-          'imageUrl': imageUrl,
+        final foundItemRef = await FirebaseFirestore.instance
+            .collection('found_items')
+            .add({
+              'title': _titleController.text.trim(),
+              'description': _descriptionController.text.trim(),
+              'location': _locationController.text.trim(),
+              'dateFound': Timestamp.fromDate(_selectedDate!),
+              'estimatedTime': _estimatedTimeController.text.trim(),
+              'contactNumber': _contactController.text.trim(),
+              'imageUrl': imageUrl,
+              'userId': user.uid,
+              'userName': userData?['fullName'] ?? 'Unknown',
+              'userEmail': user.email ?? '',
+              'createdAt': FieldValue.serverTimestamp(),
+              'status': 'active',
+            });
+
+        // Create notification for the user
+        await FirebaseFirestore.instance.collection('notifications').add({
           'userId': user.uid,
-          'userName': userData?['fullName'] ?? 'Unknown',
-          'userEmail': user.email ?? '',
+          'title': 'Found Item Posted',
+          'description':
+              'Your found item "${_titleController.text.trim()}" has been posted successfully.',
+          'type': 'resolved',
+          'isRead': false,
           'createdAt': FieldValue.serverTimestamp(),
-          'status': 'active',
+          'relatedId': foundItemRef.id,
         });
 
         setState(() {

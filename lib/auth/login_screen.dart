@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'register_screen.dart';
+import 'forgot_password_screen.dart';
 import 'auth_service.dart';
 import '../screens/main_navigation.dart';
 import '../utils/notification_service.dart';
@@ -232,7 +233,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    // TODO: Navigate to forgot password screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ForgotPasswordScreen(),
+                      ),
+                    );
                   },
                   child: const Text(
                     'Forgot Password?',

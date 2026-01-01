@@ -185,19 +185,33 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
         }
 
         // Create lost item document
-        await FirebaseFirestore.instance.collection('lost_items').add({
-          'title': _titleController.text.trim(),
-          'description': _descriptionController.text.trim(),
-          'location': _locationController.text.trim(),
-          'dateLost': Timestamp.fromDate(_selectedDate!),
-          'estimatedTime': _estimatedTimeController.text.trim(),
-          'contactNumber': _contactController.text.trim(),
-          'imageUrl': imageUrl,
+        final lostItemRef = await FirebaseFirestore.instance
+            .collection('lost_items')
+            .add({
+              'title': _titleController.text.trim(),
+              'description': _descriptionController.text.trim(),
+              'location': _locationController.text.trim(),
+              'dateLost': Timestamp.fromDate(_selectedDate!),
+              'estimatedTime': _estimatedTimeController.text.trim(),
+              'contactNumber': _contactController.text.trim(),
+              'imageUrl': imageUrl,
+              'userId': user.uid,
+              'userName': userData?['fullName'] ?? 'Unknown',
+              'userEmail': user.email ?? '',
+              'createdAt': FieldValue.serverTimestamp(),
+              'status': 'active',
+            });
+
+        // Create notification for the user
+        await FirebaseFirestore.instance.collection('notifications').add({
           'userId': user.uid,
-          'userName': userData?['fullName'] ?? 'Unknown',
-          'userEmail': user.email ?? '',
+          'title': 'Lost Item Posted',
+          'description':
+              'Your lost item "${_titleController.text.trim()}" has been posted successfully.',
+          'type': 'match',
+          'isRead': false,
           'createdAt': FieldValue.serverTimestamp(),
-          'status': 'active',
+          'relatedId': lostItemRef.id,
         });
 
         setState(() {
