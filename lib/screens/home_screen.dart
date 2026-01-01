@@ -4,6 +4,7 @@ import '../auth/auth_service.dart';
 import 'lost_and_found_screen.dart';
 import 'notice_screen.dart';
 import 'events_screen.dart';
+import 'notification_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -72,8 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.black87,
             ),
             onPressed: () {
-              _showComingSoonMessage(
-                'Notifications feature is under development',
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationScreen(),
+                ),
               );
             },
           ),
