@@ -291,7 +291,7 @@ class _EventsScreenState extends State<EventsScreen>
             ),
             const SizedBox(height: 8),
 
-            // Date and Bookmark
+            // Date
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
@@ -306,23 +306,10 @@ class _EventsScreenState extends State<EventsScreen>
                     event['date'],
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                   ),
-                  const Spacer(),
-                  IconButton(
-                    icon: Icon(
-                      Icons.bookmark_border,
-                      color: Colors.grey.shade600,
-                      size: 20,
-                    ),
-                    onPressed: () {
-                      // Bookmark functionality
-                    },
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
 
             // Image
             if (imageUrl != null)

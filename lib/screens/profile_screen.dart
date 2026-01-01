@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import '../auth/auth_service.dart';
 import '../auth/login_screen.dart';
+import 'profile/edit_profile_screen.dart';
+import 'profile/my_lost_items_screen.dart';
+import 'profile/my_found_items_screen.dart';
+import 'profile/help_support_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -172,55 +176,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               // Profile Avatar Section
               Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2196F3),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2196F3),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
                       ),
-                      child: Center(
-                        child: Text(
-                          _getInitials(_userName),
-                          style: const TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      _getInitials(_userName),
+                      style: const TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        width: 32,
-                        height: 32,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 2,
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.camera_alt,
-                          size: 16,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -263,27 +242,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 24),
 
               // Menu Items
+              _buildMenuItem(Icons.edit_outlined, 'Edit Profile', () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EditProfileScreen(),
+                  ),
+                );
+                if (result == true && mounted) {
+                  _loadUserData();
+                }
+              }),
               _buildMenuItem(Icons.inventory_2_outlined, 'My Lost Items', () {
-                // TODO: Navigate to My Lost Items
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyLostItemsScreen(),
+                  ),
+                );
               }),
               _buildMenuItem(Icons.search_outlined, 'My Found Items', () {
-                // TODO: Navigate to My Found Items
-              }),
-              _buildMenuItem(Icons.bookmark_border, 'Bookmarked News', () {
-                // TODO: Navigate to Bookmarked News
-              }),
-              _buildMenuItem(
-                Icons.notifications_outlined,
-                'Notification Settings',
-                () {
-                  // TODO: Navigate to Notification Settings
-                },
-              ),
-              _buildMenuItem(Icons.palette_outlined, 'Theme Settings', () {
-                // TODO: Navigate to Theme Settings
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyFoundItemsScreen(),
+                  ),
+                );
               }),
               _buildMenuItem(Icons.help_outline, 'Help & Support', () {
-                // TODO: Navigate to Help & Support
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HelpSupportScreen(),
+                  ),
+                );
               }),
               const SizedBox(height: 24),
 

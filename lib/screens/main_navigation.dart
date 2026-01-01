@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'notice_screen.dart';
-import 'news_screen.dart';
+import 'events_screen.dart';
 import 'profile_screen.dart';
 import 'post_lost_item_screen.dart';
 import 'post_found_item_screen.dart';
@@ -19,7 +19,7 @@ class _MainNavigationState extends State<MainNavigation> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const NoticeScreen(),
-    const NewsScreen(),
+    const EventsScreen(),
     const ProfileScreen(),
   ];
 
@@ -221,7 +221,7 @@ class _MainNavigationState extends State<MainNavigation> {
                 _buildNavItem(0, Icons.home, 'Home'),
                 _buildNavItem(1, Icons.work, 'Notice'),
                 const SizedBox(width: 40), // Space for FAB
-                _buildNavItem(2, Icons.newspaper, 'News'),
+                _buildNavItem(2, Icons.event, 'Events'),
                 _buildNavItem(3, Icons.person, 'Profile'),
               ],
             ),
