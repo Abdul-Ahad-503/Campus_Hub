@@ -100,15 +100,6 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
 
         final userData = userDoc.data();
 
-        // Get category color
-        Color categoryColor = Colors.orange;
-        for (var cat in _categories) {
-          if (cat['name'] == _selectedCategory) {
-            categoryColor = cat['color'];
-            break;
-          }
-        }
-
         // Create notice document
         await FirebaseFirestore.instance.collection('notices').add({
           'category': _selectedCategory,
