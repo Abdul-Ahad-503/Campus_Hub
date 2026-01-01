@@ -77,14 +77,7 @@ class _NoticeScreenState extends State<NoticeScreen>
             fontSize: 20,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.black87),
-            onPressed: () {
-              // Search functionality
-            },
-          ),
-        ],
+        
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: TabBar(
