@@ -183,15 +183,11 @@ class _NoticeScreenState extends State<NoticeScreen>
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
+          return Center(child: Text('Error: ${snapshot.error}'));
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -207,10 +203,7 @@ class _NoticeScreenState extends State<NoticeScreen>
                 const SizedBox(height: 16),
                 Text(
                   'No notices found',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
                 ),
               ],
             ),
@@ -224,11 +217,13 @@ class _NoticeScreenState extends State<NoticeScreen>
           final noticeDepartment = data['department'] ?? 'All Departments';
 
           // Category filter
-          bool categoryMatch = category == 'All' ||
+          bool categoryMatch =
+              category == 'All' ||
               noticeCategory == category.toUpperCase().replaceAll('S', '');
 
           // Department filter
-          bool departmentMatch = _selectedDepartment == 'All Departments' ||
+          bool departmentMatch =
+              _selectedDepartment == 'All Departments' ||
               noticeDepartment == _selectedDepartment;
 
           return categoryMatch && departmentMatch;
@@ -257,18 +252,11 @@ class _NoticeScreenState extends State<NoticeScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.search_off,
-                  size: 64,
-                  color: Colors.grey.shade400,
-                ),
+                Icon(Icons.search_off, size: 64, color: Colors.grey.shade400),
                 const SizedBox(height: 16),
                 Text(
                   'No notices match your filters',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
                 ),
               ],
             ),
@@ -281,7 +269,7 @@ class _NoticeScreenState extends State<NoticeScreen>
           itemBuilder: (context, index) {
             final doc = filteredDocs[index];
             final data = doc.data() as Map<String, dynamic>;
-            
+
             // Create notice map with color
             final notice = {
               'category': data['category'] ?? 'EVENT',
