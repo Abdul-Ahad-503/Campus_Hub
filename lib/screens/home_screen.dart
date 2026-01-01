@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../auth/auth_service.dart';
 import 'lost_and_found_screen.dart';
 import 'notice_screen.dart';
+import 'events_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -177,8 +178,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: 'Events Details',
                           color: const Color(0xFF9C27B0),
                           onTap: () {
-                            _showComingSoonMessage(
-                              'Events Details feature is under development',
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const EventsScreen(),
+                              ),
                             );
                           },
                         ),
