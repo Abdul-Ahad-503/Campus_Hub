@@ -6,7 +6,7 @@ import 'dart:io';
 import 'dart:convert';
 
 class PostLostItemScreen extends StatefulWidget {
-  const PostLostItemScreen({Key? key}) : super(key: key);
+  const PostLostItemScreen({super.key});
 
   @override
   State<PostLostItemScreen> createState() => _PostLostItemScreenState();

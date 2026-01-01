@@ -8,8 +8,7 @@ import 'post_found_item_screen.dart';
 class LostAndFoundScreen extends StatefulWidget {
   final int initialTabIndex;
 
-  const LostAndFoundScreen({Key? key, this.initialTabIndex = 0})
-    : super(key: key);
+  const LostAndFoundScreen({super.key, this.initialTabIndex = 0});
 
   @override
   State<LostAndFoundScreen> createState() => _LostAndFoundScreenState();

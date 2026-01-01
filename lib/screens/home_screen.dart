@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../auth/auth_service.dart';
 import 'lost_and_found_screen.dart';
+import 'notice_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -163,8 +164,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: 'Notice Board',
                           color: const Color(0xFFFF9800),
                           onTap: () {
-                            _showComingSoonMessage(
-                              'Notice Board feature is under development',
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const NoticeScreen(),
+                              ),
                             );
                           },
                         ),

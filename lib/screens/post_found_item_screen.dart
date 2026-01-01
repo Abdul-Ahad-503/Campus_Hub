@@ -6,7 +6,7 @@ import 'dart:io';
 import 'dart:convert';
 
 class PostFoundItemScreen extends StatefulWidget {
-  const PostFoundItemScreen({Key? key}) : super(key: key);
+  const PostFoundItemScreen({super.key});
 
   @override
   State<PostFoundItemScreen> createState() => _PostFoundItemScreenState();
