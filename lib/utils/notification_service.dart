@@ -11,9 +11,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class NotificationService {
-  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  static final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
-  
+  static final FirebaseMessaging _firebaseMessaging =
+      FirebaseMessaging.instance;
+  static final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
+
   // Initialize FCM and local notifications
   static Future<void> initialize() async {
     // Request permission
@@ -30,14 +32,15 @@ class NotificationService {
     print('Notification permission status: ${settings.authorizationStatus}');
 
     // Initialize local notifications
-    const AndroidInitializationSettings androidSettings = 
+    const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    
-    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+
+    const DarwinInitializationSettings iosSettings =
+        DarwinInitializationSettings(
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
 
     const InitializationSettings initSettings = InitializationSettings(
       android: androidSettings,
@@ -60,7 +63,9 @@ class NotificationService {
     );
 
     await _localNotifications
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(channel);
 
     // Handle background messages
@@ -94,10 +99,9 @@ class NotificationService {
       final fcmToken = token ?? await _firebaseMessaging.getToken();
       if (fcmToken == null) return;
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .update({'fcmToken': fcmToken});
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
+        {'fcmToken': fcmToken},
+      );
 
       print('FCM Token saved: $fcmToken');
     } catch (e) {
@@ -168,7 +172,7 @@ class NotificationService {
         final notificationRef = FirebaseFirestore.instance
             .collection('notifications')
             .doc();
-        
+
         batch.set(notificationRef, {
           'userId': userDoc.id,
           'title': title,

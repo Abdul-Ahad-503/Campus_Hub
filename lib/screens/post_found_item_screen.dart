@@ -216,7 +216,8 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
         // Send notification to all users
         await NotificationService.sendToAllUsers(
           title: '✅ Found Item Posted',
-          body: '${userData?['fullName'] ?? 'Someone'} found a ${_titleController.text.trim()} at ${_locationController.text.trim()}',
+          body:
+              '${userData?['fullName'] ?? 'Someone'} found a ${_titleController.text.trim()} at ${_locationController.text.trim()}',
           type: 'resolved',
           relatedId: foundItemRef.id,
         );

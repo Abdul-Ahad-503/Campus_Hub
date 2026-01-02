@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import '../utils/notification_service.dart';
 
 class AddNoticeScreen extends StatefulWidget {
   const AddNoticeScreen({Key? key}) : super(key: key);
@@ -117,28 +118,13 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
               'status': 'active',
             });
 
-        // Get all users to send notifications
-        final usersSnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .get();
-
-        // Create notification for each user
-        final batch = FirebaseFirestore.instance.batch();
-        for (var userDoc in usersSnapshot.docs) {
-          final notificationRef = FirebaseFirestore.instance
-              .collection('notifications')
-              .doc();
-          batch.set(notificationRef, {
-            'userId': userDoc.id,
-            'title': 'New Notice: $_selectedCategory',
-            'description': _titleController.text.trim(),
-            'type': 'exam',
-            'isRead': false,
-            'createdAt': FieldValue.serverTimestamp(),
-            'relatedId': noticeRef.id,
-          });
-        }
-        await batch.commit();
+        // Send notification to all users
+        await NotificationService.sendToAllUsers(
+          title: '📌 New Notice: $_selectedCategory',
+          body: _titleController.text.trim(),
+          type: 'exam',
+          relatedId: noticeRef.id,
+        );
 
         setState(() {
           _isSubmitting = false;

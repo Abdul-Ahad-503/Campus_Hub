@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'dart:convert';
+import '../utils/notification_service.dart';
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({Key? key}) : super(key: key);
@@ -232,29 +233,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
               'status': 'active',
             });
 
-        // Get all users to send notifications
-        final usersSnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .get();
-
-        // Create notification for each user
-        final batch = FirebaseFirestore.instance.batch();
-        for (var userDoc in usersSnapshot.docs) {
-          final notificationRef = FirebaseFirestore.instance
-              .collection('notifications')
-              .doc();
-          batch.set(notificationRef, {
-            'userId': userDoc.id,
-            'title': 'New Event: $_selectedCategory',
-            'description':
-                '${_societyController.text.trim()} - ${_titleController.text.trim()}',
-            'type': 'event',
-            'isRead': false,
-            'createdAt': FieldValue.serverTimestamp(),
-            'relatedId': eventRef.id,
-          });
-        }
-        await batch.commit();
+        // Send notification to all users
+        await NotificationService.sendToAllUsers(
+          title: '🎉 New Event: $_selectedCategory',
+          body:
+              '${_societyController.text.trim()} - ${_titleController.text.trim()}',
+          type: 'event',
+          relatedId: eventRef.id,
+        );
 
         setState(() {
           _isSubmitting = false;

@@ -206,7 +206,8 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
         // Send notification to all users
         await NotificationService.sendToAllUsers(
           title: '📢 Lost Item Alert',
-          body: '${userData?['fullName'] ?? 'Someone'} reported a lost ${_titleController.text.trim()} at ${_locationController.text.trim()}',
+          body:
+              '${userData?['fullName'] ?? 'Someone'} reported a lost ${_titleController.text.trim()} at ${_locationController.text.trim()}',
           type: 'match',
           relatedId: lostItemRef.id,
         );
