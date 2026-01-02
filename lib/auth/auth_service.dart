@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -26,6 +27,9 @@ class AuthService {
       User? user = result.user;
 
       if (user != null) {
+        // Get FCM token
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        
         // Store additional user data in Firestore
         await _firestore.collection('users').doc(user.uid).set({
           'uid': user.uid,
@@ -34,6 +38,7 @@ class AuthService {
           'studentId': studentId,
           'department': department,
           'phoneNumber': phoneNumber,
+          'fcmToken': fcmToken,
           'createdAt': FieldValue.serverTimestamp(),
           'profileComplete': true,
         });
@@ -85,6 +90,15 @@ class AuthService {
   }) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
+      // Update FCM token on login
+      if (result.user != null) {
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        await _firestore.collection('users').doc(result.user!.uid).update({
+          'fcmToken': fcmToken,
+          'lastLogin': FieldValue.serverTimestamp(),
+        });
+      }
+
         email: email,
         password: password,
       );

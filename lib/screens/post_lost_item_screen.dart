@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'dart:convert';
+import '../utils/notification_service.dart';
 
 class PostLostItemScreen extends StatefulWidget {
   const PostLostItemScreen({super.key});
@@ -202,17 +203,13 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
               'status': 'active',
             });
 
-        // Create notification for the user
-        await FirebaseFirestore.instance.collection('notifications').add({
-          'userId': user.uid,
-          'title': 'Lost Item Posted',
-          'description':
-              'Your lost item "${_titleController.text.trim()}" has been posted successfully.',
-          'type': 'match',
-          'isRead': false,
-          'createdAt': FieldValue.serverTimestamp(),
-          'relatedId': lostItemRef.id,
-        });
+        // Send notification to all users
+        await NotificationService.sendToAllUsers(
+          title: '📢 Lost Item Alert',
+          body: '${userData?['fullName'] ?? 'Someone'} reported a lost ${_titleController.text.trim()} at ${_locationController.text.trim()}',
+          type: 'match',
+          relatedId: lostItemRef.id,
+        );
 
         setState(() {
           _isUploading = false;

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'dart:convert';
+import '../utils/notification_service.dart';
 
 class PostFoundItemScreen extends StatefulWidget {
   const PostFoundItemScreen({super.key});
@@ -212,17 +213,13 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
               'status': 'active',
             });
 
-        // Create notification for the user
-        await FirebaseFirestore.instance.collection('notifications').add({
-          'userId': user.uid,
-          'title': 'Found Item Posted',
-          'description':
-              'Your found item "${_titleController.text.trim()}" has been posted successfully.',
-          'type': 'resolved',
-          'isRead': false,
-          'createdAt': FieldValue.serverTimestamp(),
-          'relatedId': foundItemRef.id,
-        });
+        // Send notification to all users
+        await NotificationService.sendToAllUsers(
+          title: '✅ Found Item Posted',
+          body: '${userData?['fullName'] ?? 'Someone'} found a ${_titleController.text.trim()} at ${_locationController.text.trim()}',
+          type: 'resolved',
+          relatedId: foundItemRef.id,
+        );
 
         setState(() {
           _isUploading = false;
