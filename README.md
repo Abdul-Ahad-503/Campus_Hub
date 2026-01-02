@@ -38,6 +38,7 @@ CampusHub is a comprehensive mobile application designed to streamline campus li
 - **Real-time Updates** - Instant synchronization across all users
 - **Time-stamped** - See when notices were posted with relative time display
 
+
 ### 🔔 Notifications
 - **Real-time Notifications** - Instant alerts for new events, notices, and item postings
 - **Type-based Icons** - Color-coded notifications (Match, Exam, Achievement, Resolved, Event)
