@@ -267,7 +267,7 @@ lib/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/campus_hub.git
+   git clone https://github.com/Abdul-Ahad-503/Campus_Hub.git
    cd campus_hub
    ```
 
