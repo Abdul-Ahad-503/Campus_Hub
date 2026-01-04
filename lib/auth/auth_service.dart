@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io' show Platform;
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -27,8 +29,16 @@ class AuthService {
       User? user = result.user;
 
       if (user != null) {
-        // Get FCM token
-        final fcmToken = await FirebaseMessaging.instance.getToken();
+        // Get FCM token (only on mobile platforms)
+        String? fcmToken;
+        try {
+          if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+            fcmToken = await FirebaseMessaging.instance.getToken();
+          }
+        } catch (e) {
+          print('Error getting FCM token: $e');
+          // Continue without FCM token
+        }
 
         // Store additional user data in Firestore
         await _firestore.collection('users').doc(user.uid).set({
@@ -94,13 +104,25 @@ class AuthService {
         password: password,
       );
 
-      // Update FCM token on login
+      // Update FCM token on login (only on mobile platforms)
       if (result.user != null) {
-        final fcmToken = await FirebaseMessaging.instance.getToken();
-        await _firestore.collection('users').doc(result.user!.uid).update({
-          'fcmToken': fcmToken,
-          'lastLogin': FieldValue.serverTimestamp(),
-        });
+        try {
+          if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+            final fcmToken = await FirebaseMessaging.instance.getToken();
+            await _firestore.collection('users').doc(result.user!.uid).update({
+              'fcmToken': fcmToken,
+              'lastLogin': FieldValue.serverTimestamp(),
+            });
+          } else {
+            // Just update last login for web
+            await _firestore.collection('users').doc(result.user!.uid).update({
+              'lastLogin': FieldValue.serverTimestamp(),
+            });
+          }
+        } catch (e) {
+          print('Error updating FCM token: $e');
+          // Continue without updating token
+        }
       }
 
       return {
