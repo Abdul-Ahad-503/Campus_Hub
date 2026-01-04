@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import '../auth/auth_service.dart';
+import '../utils/theme_provider.dart';
 import 'lost_and_found_screen.dart';
 import 'notice_screen.dart';
 import 'events_screen.dart';
@@ -53,17 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Campus Hub',
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
         centerTitle: true,
         actions: [
@@ -83,9 +81,9 @@ class _HomeScreenState extends State<HomeScreen> {
               return Stack(
                 children: [
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.notifications_outlined,
-                      color: Colors.black87,
+                      color: Theme.of(context).iconTheme.color,
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -151,21 +149,57 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Dark Mode Toggle Row
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).cardTheme.color,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Theme.of(context).dividerColor,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            context.watch<ThemeProvider>().isDarkMode
+                                ? Icons.dark_mode
+                                : Icons.light_mode,
+                            color: const Color(0xFF2196F3),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'Dark Mode',
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Switch(
+                            value: context.watch<ThemeProvider>().isDarkMode,
+                            onChanged: (value) {
+                              context.read<ThemeProvider>().toggleTheme();
+                            },
+                            activeColor: const Color(0xFF2196F3),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
                     // Greeting Section
                     Text(
                       'Hello, $userName! 👋',
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'What would you like to do today?',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey.shade600,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).textTheme.bodySmall?.color,
                       ),
                     ),
                     const SizedBox(height: 32),
@@ -244,13 +278,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Recent Notices',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         TextButton(
                           onPressed: () {
@@ -279,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: const EdgeInsets.all(16),
                             child: Text(
                               'Error loading notices',
-                              style: TextStyle(color: Colors.grey.shade600),
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           );
                         }
@@ -298,24 +329,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           return Container(
                             padding: const EdgeInsets.all(24),
                             decoration: BoxDecoration(
-                              color: Colors.grey.shade50,
+                              color: Theme.of(context).cardTheme.color,
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.grey.shade200),
+                              border: Border.all(
+                                color: Theme.of(context).dividerColor,
+                              ),
                             ),
                             child: Column(
                               children: [
                                 Icon(
                                   Icons.notifications_none,
                                   size: 48,
-                                  color: Colors.grey.shade400,
+                                  color: Theme.of(
+                                    context,
+                                  ).iconTheme.color?.withOpacity(0.5),
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
                                   'No notices yet',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey.shade600,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                               ],
                             ),
@@ -578,9 +610,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200, width: 1),
+        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
       ),
       child: Row(
         children: [
@@ -599,23 +631,21 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  time,
-                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-                ),
+                Text(time, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),
-          Icon(Icons.chevron_right, color: Colors.grey.shade400),
+          Icon(
+            Icons.chevron_right,
+            color: Theme.of(context).iconTheme.color?.withOpacity(0.5),
+          ),
         ],
       ),
     );

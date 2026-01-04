@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../auth/auth_service.dart';
+import '../utils/theme_provider.dart';
 import '../auth/login_screen.dart';
 import 'profile/edit_profile_screen.dart';
 import 'profile/my_lost_items_screen.dart';
@@ -141,23 +143,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).iconTheme.color,
+          ),
           onPressed: () {
             // Navigation is handled by bottom nav, so this can be empty
           },
         ),
-        title: const Text(
+        title: Text(
           'Profile',
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
         centerTitle: true,
       ),
@@ -197,17 +198,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 16),
               Text(
                 _userName,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 4),
-              Text(
-                _userEmail,
-                style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-              ),
+              Text(_userEmail, style: Theme.of(context).textTheme.bodyMedium),
               const SizedBox(height: 24),
 
               // Info Cards
@@ -234,6 +230,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 24),
 
               // Menu Items
+              // Dark Mode Toggle
+              Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardTheme.color,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  leading: Icon(
+                    context.watch<ThemeProvider>().isDarkMode
+                        ? Icons.dark_mode
+                        : Icons.light_mode,
+                    color: const Color(0xFF2196F3),
+                    size: 24,
+                  ),
+                  title: const Text(
+                    'Dark Mode',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                  ),
+                  trailing: Switch(
+                    value: context.watch<ThemeProvider>().isDarkMode,
+                    onChanged: (value) {
+                      context.read<ThemeProvider>().toggleTheme();
+                    },
+                    activeColor: const Color(0xFF2196F3),
+                  ),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
               _buildMenuItem(Icons.edit_outlined, 'Edit Profile', () async {
                 final result = await Navigator.push(
                   context,
@@ -317,7 +346,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -335,18 +364,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  label,
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                ),
+                Text(label, style: Theme.of(context).textTheme.bodySmall),
                 const SizedBox(height: 4),
                 Text(
                   value,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -360,20 +384,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
-        leading: Icon(icon, color: Colors.grey.shade700, size: 24),
+        leading: Icon(
+          icon,
+          color: Theme.of(context).iconTheme.color?.withOpacity(0.7),
+          size: 24,
+        ),
         title: Text(
           title,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
         ),
-        trailing: Icon(Icons.chevron_right, color: Colors.grey.shade400),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: Theme.of(context).iconTheme.color?.withOpacity(0.5),
+        ),
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       ),
