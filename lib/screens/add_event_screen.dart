@@ -530,7 +530,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
               decoration: InputDecoration(
                 hintText: 'e.g., Computer Science Society',
                 filled: true,
-                fillColor: Colors.grey.shade50,
+                fillColor: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey[800]
+                    : Colors.grey.shade100,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: Colors.grey.shade300),
@@ -575,7 +577,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
               decoration: InputDecoration(
                 hintText: 'Enter event title',
                 filled: true,
-                fillColor: Colors.grey.shade50,
+                fillColor: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey[800]
+                    : Colors.grey.shade100,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: Colors.grey.shade300),
@@ -621,7 +625,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
               decoration: InputDecoration(
                 hintText: 'Enter event description',
                 filled: true,
-                fillColor: Colors.grey.shade50,
+                fillColor: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey[800]
+                    : Colors.grey.shade100,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: Colors.grey.shade300),

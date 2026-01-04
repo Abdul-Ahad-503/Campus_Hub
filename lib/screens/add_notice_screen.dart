@@ -405,7 +405,9 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
               decoration: InputDecoration(
                 hintText: 'Enter notice title',
                 filled: true,
-                fillColor: Colors.grey.shade50,
+                fillColor: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey[800]
+                    : Colors.grey.shade100,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: Colors.grey.shade300),
@@ -449,7 +451,9 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
               decoration: InputDecoration(
                 hintText: 'Enter notice description',
                 filled: true,
-                fillColor: Colors.grey.shade50,
+                fillColor: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey[800]
+                    : Colors.grey.shade100,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: Colors.grey.shade300),

@@ -532,7 +532,9 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
                     hintText: 'e.g., Black iPhone 14',
                     hintStyle: TextStyle(color: Colors.grey.shade400),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey.shade100,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -561,7 +563,9 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
                     hintText: 'Describe the item in detail...',
                     hintStyle: TextStyle(color: Colors.grey.shade400),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey.shade100,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -586,7 +590,9 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
                     hintText: 'Where did you find it?',
                     hintStyle: TextStyle(color: Colors.grey.shade400),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey.shade100,
                     prefixIcon: Icon(
                       Icons.location_on,
                       color: Colors.grey.shade600,
@@ -664,7 +670,9 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
                     hintText: 'e.g., Around 2:00 PM',
                     hintStyle: TextStyle(color: Colors.grey.shade400),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey.shade100,
                     prefixIcon: Icon(
                       Icons.access_time,
                       color: Colors.grey.shade600,
@@ -697,7 +705,9 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
                     hintText: '+92 300 1234567',
                     hintStyle: TextStyle(color: Colors.grey.shade400),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey.shade100,
                     prefixIcon: Icon(Icons.phone, color: Colors.grey.shade600),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),

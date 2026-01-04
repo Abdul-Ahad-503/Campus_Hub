@@ -5,6 +5,7 @@ import '../auth/auth_service.dart';
 import '../utils/theme_provider.dart';
 import 'lost_and_found_screen.dart';
 import 'notice_screen.dart';
+import 'notice_detail_screen.dart';
 import 'events_screen.dart';
 import 'notification_screen.dart';
 
@@ -393,6 +394,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       : timeAgo,
                                   icon: categoryIcon,
                                   category: data['category'] ?? '',
+                                  noticeData: data,
+                                  docId: doc.id,
                                 ),
                                 if (index < notices.length - 1)
                                   const SizedBox(height: 12),
@@ -548,6 +551,8 @@ class _HomeScreenState extends State<HomeScreen> {
     required String time,
     required IconData icon,
     String? category,
+    required Map<String, dynamic> noticeData,
+    required String docId,
   }) {
     Color categoryColor;
     switch (category?.toUpperCase()) {
@@ -567,46 +572,72 @@ class _HomeScreenState extends State<HomeScreen> {
         categoryColor = const Color(0xFF2196F3);
     }
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardTheme.color,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: categoryColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
+    // Prepare notice data with all required fields
+    final noticeMap = {
+      'id': docId,
+      'title': noticeData['title'] ?? '',
+      'description': noticeData['description'] ?? '',
+      'category': noticeData['category'] ?? '',
+      'department': noticeData['department'] ?? '',
+      'date': noticeData['date'] ?? '',
+      'color': categoryColor,
+      'timestamp': noticeData['createdAt'],
+      'userName': noticeData['userName'] ?? 'Unknown',
+      'userEmail': noticeData['userEmail'] ?? '',
+      'userId': noticeData['userId'] ?? '',
+      'createdAt': noticeData['createdAt'],
+    };
+
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NoticeDetailScreen(notice: noticeMap),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardTheme.color,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Theme.of(context).dividerColor, width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: categoryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: categoryColor, size: 24),
             ),
-            child: Icon(icon, color: categoryColor, size: 24),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(time, style: Theme.of(context).textTheme.bodySmall),
-              ],
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(time, style: Theme.of(context).textTheme.bodySmall),
+                ],
+              ),
             ),
-          ),
-          Icon(
-            Icons.chevron_right,
-            color: Theme.of(context).iconTheme.color?.withOpacity(0.5),
-          ),
-        ],
+            Icon(
+              Icons.chevron_right,
+              color: Theme.of(context).iconTheme.color?.withOpacity(0.5),
+            ),
+          ],
+        ),
       ),
     );
   }

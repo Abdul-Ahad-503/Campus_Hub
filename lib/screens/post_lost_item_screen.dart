@@ -511,7 +511,9 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
                     hintText: 'e.g., Black iPhone 14',
                     hintStyle: TextStyle(color: Colors.grey.shade400),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey.shade100,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -540,7 +542,9 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
                     hintText: 'Describe your item in detail...',
                     hintStyle: TextStyle(color: Colors.grey.shade400),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey.shade100,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -565,7 +569,9 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
                     hintText: 'Select location',
                     hintStyle: TextStyle(color: Colors.grey.shade400),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey.shade100,
                     prefixIcon: Icon(
                       Icons.location_on,
                       color: Colors.grey.shade600,
@@ -643,7 +649,9 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
                     hintText: 'e.g., Around 2:00 PM',
                     hintStyle: TextStyle(color: Colors.grey.shade400),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey.shade100,
                     prefixIcon: Icon(
                       Icons.access_time,
                       color: Colors.grey.shade600,
@@ -676,7 +684,9 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
                     hintText: '+92 300 1234567',
                     hintStyle: TextStyle(color: Colors.grey.shade400),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey.shade100,
                     prefixIcon: Icon(Icons.phone, color: Colors.grey.shade600),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),

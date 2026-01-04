@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'add_notice_screen.dart';
+import 'notice_detail_screen.dart';
 
 class NoticeScreen extends StatefulWidget {
   const NoticeScreen({super.key});
@@ -103,29 +104,39 @@ class _NoticeScreenState extends State<NoticeScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardTheme.color,
               border: Border(
-                bottom: BorderSide(color: Colors.grey.shade200, width: 1),
+                bottom: BorderSide(
+                  color: Theme.of(context).dividerColor,
+                  width: 1,
+                ),
               ),
             ),
             child: Row(
               children: [
-                const Icon(Icons.filter_list, size: 20, color: Colors.grey),
+                Icon(
+                  Icons.filter_list,
+                  size: 20,
+                  color: Theme.of(context).iconTheme.color?.withOpacity(0.6),
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: DropdownButton<String>(
                     value: _selectedDepartment,
                     isExpanded: true,
                     underline: const SizedBox(),
-                    style: const TextStyle(
-                      color: Colors.black87,
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.keyboard_arrow_down,
-                      color: Colors.grey,
+                      color: Theme.of(
+                        context,
+                      ).iconTheme.color?.withOpacity(0.6),
                     ),
+                    dropdownColor: Theme.of(context).cardTheme.color,
                     items: _departments.map((department) {
                       return DropdownMenuItem(
                         value: department,
@@ -262,13 +273,18 @@ class _NoticeScreenState extends State<NoticeScreen>
             final doc = filteredDocs[index];
             final data = doc.data() as Map<String, dynamic>;
 
-            // Create notice map with color
+            // Create notice map with all data
             final notice = {
               'category': data['category'] ?? 'EVENT',
               'title': data['title'] ?? 'Untitled',
               'description': data['description'] ?? '',
               'date': data['date'] ?? 'No date',
+              'timestamp': data['timestamp'],
               'department': data['department'] ?? 'All Departments',
+              'userName': data['userName'] ?? 'Unknown',
+              'userEmail': data['userEmail'] ?? '',
+              'userId': data['userId'] ?? '',
+              'createdAt': data['createdAt'],
               'color': _getCategoryColor(data['category'] ?? 'EVENT'),
             };
 
@@ -280,92 +296,121 @@ class _NoticeScreenState extends State<NoticeScreen>
   }
 
   Widget _buildNoticeCard(Map<String, dynamic> notice) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border(left: BorderSide(color: notice['color'], width: 4)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade200,
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NoticeDetailScreen(notice: notice),
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Category Badge
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: notice['color'].withOpacity(0.1),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                notice['category'],
-                style: TextStyle(
-                  color: notice['color'],
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Title
-            Text(
-              notice['title'],
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Description
-            Text(
-              notice['description'],
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade700,
-                height: 1.4,
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Date and Department
-            Row(
-              children: [
-                Icon(
-                  Icons.calendar_today,
-                  size: 14,
-                  color: Colors.grey.shade600,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  notice['date'],
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                ),
-                const SizedBox(width: 16),
-                Icon(Icons.business, size: 14, color: Colors.grey.shade600),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    notice['department'],
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.grey[850]
+              : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border(
+            left: BorderSide(color: notice['color'], width: 4),
+            right: BorderSide(color: notice['color'], width: 4),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.grey.shade200,
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Category Badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: notice['color'].withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  notice['category'],
+                  style: TextStyle(
+                    color: notice['color'],
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Title
+              Text(
+                notice['title'],
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // Description
+              Text(
+                notice['description'],
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.color?.withOpacity(0.8),
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Date and Department
+              Row(
+                children: [
+                  Icon(
+                    Icons.calendar_today,
+                    size: 14,
+                    color: Theme.of(context).iconTheme.color?.withOpacity(0.6),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    notice['date'],
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).textTheme.bodySmall?.color,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Icon(
+                    Icons.business,
+                    size: 14,
+                    color: Theme.of(context).iconTheme.color?.withOpacity(0.6),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      notice['department'],
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).textTheme.bodySmall?.color,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
