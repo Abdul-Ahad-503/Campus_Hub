@@ -53,10 +53,9 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF2196F3),
-              onPrimary: Colors.white,
-              onSurface: Colors.black87,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF2196F3),
+              brightness: Theme.of(context).brightness,
             ),
           ),
           child: child!,
@@ -322,21 +321,20 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).iconTheme.color,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Add New Notice',
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),
       body: Form(
@@ -345,13 +343,11 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
           padding: const EdgeInsets.all(20),
           children: [
             // Category Selection
-            const Text(
+            Text(
               'Category',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             Wrap(
@@ -397,13 +393,11 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
             const SizedBox(height: 24),
 
             // Title Field
-            const Text(
+            Text(
               'Title',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextFormField(
@@ -442,13 +436,11 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
             const SizedBox(height: 20),
 
             // Description Field
-            const Text(
+            Text(
               'Description',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextFormField(
@@ -485,13 +477,11 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
             const SizedBox(height: 20),
 
             // Date Field
-            const Text(
+            Text(
               'Date',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             InkWell(
@@ -502,27 +492,26 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                   vertical: 14,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
+                  color: Theme.of(context).inputDecorationTheme.fillColor,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: Theme.of(context).dividerColor),
                 ),
                 child: Row(
                   children: [
                     Icon(
                       Icons.calendar_today,
                       size: 20,
-                      color: Colors.grey.shade600,
+                      color: Theme.of(context).iconTheme.color,
                     ),
                     const SizedBox(width: 12),
                     Text(
                       _selectedDate == null
                           ? 'Select date'
                           : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
-                      style: TextStyle(
-                        fontSize: 16,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: _selectedDate == null
-                            ? Colors.grey.shade500
-                            : Colors.black87,
+                            ? Theme.of(context).textTheme.bodySmall?.color
+                            : null,
                       ),
                     ),
                   ],
@@ -532,21 +521,19 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
             const SizedBox(height: 20),
 
             // Department Field
-            const Text(
+            Text(
               'Department',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: Colors.grey.shade50,
+                color: Theme.of(context).inputDecorationTheme.fillColor,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(color: Theme.of(context).dividerColor),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
@@ -554,9 +541,9 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                   isExpanded: true,
                   icon: Icon(
                     Icons.arrow_drop_down,
-                    color: Colors.grey.shade600,
+                    color: Theme.of(context).iconTheme.color,
                   ),
-                  style: const TextStyle(color: Colors.black87, fontSize: 16),
+                  style: Theme.of(context).textTheme.bodyLarge,
                   items: _departments.map((department) {
                     return DropdownMenuItem(
                       value: department,

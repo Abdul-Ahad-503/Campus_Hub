@@ -29,9 +29,9 @@ class _MainNavigationState extends State<MainNavigation> {
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardTheme.color,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
@@ -43,18 +43,16 @@ class _MainNavigationState extends State<MainNavigation> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: Theme.of(context).dividerColor,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Post New Item',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
 
@@ -210,7 +208,9 @@ class _MainNavigationState extends State<MainNavigation> {
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 8.0,
-        color: Colors.white,
+        color:
+            Theme.of(context).bottomAppBarTheme.color ??
+            Theme.of(context).cardTheme.color,
         elevation: 8,
         child: SafeArea(
           child: SizedBox(
@@ -247,7 +247,9 @@ class _MainNavigationState extends State<MainNavigation> {
           children: [
             Icon(
               icon,
-              color: isSelected ? const Color(0xFF2196F3) : Colors.grey,
+              color: isSelected
+                  ? const Color(0xFF2196F3)
+                  : Theme.of(context).iconTheme.color?.withOpacity(0.5),
               size: 24,
             ),
             const SizedBox(height: 2),
@@ -255,7 +257,9 @@ class _MainNavigationState extends State<MainNavigation> {
               label,
               style: TextStyle(
                 fontSize: 11,
-                color: isSelected ? const Color(0xFF2196F3) : Colors.grey,
+                color: isSelected
+                    ? const Color(0xFF2196F3)
+                    : Theme.of(context).textTheme.bodySmall?.color,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),

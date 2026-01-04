@@ -149,46 +149,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Dark Mode Toggle Row
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardTheme.color,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Theme.of(context).dividerColor,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            context.watch<ThemeProvider>().isDarkMode
-                                ? Icons.dark_mode
-                                : Icons.light_mode,
-                            color: const Color(0xFF2196F3),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'Dark Mode',
-                              style: Theme.of(context).textTheme.bodyLarge
-                                  ?.copyWith(fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          Switch(
-                            value: context.watch<ThemeProvider>().isDarkMode,
-                            onChanged: (value) {
-                              context.read<ThemeProvider>().toggleTheme();
-                            },
-                            activeColor: const Color(0xFF2196F3),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
                     // Greeting Section
                     Text(
                       'Hello, $userName! 👋',
