@@ -26,37 +26,37 @@ class HelpSupportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).iconTheme.color,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Help & Support',
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
           // Contact Support Section
-          const Text(
+          Text(
             'Contact Support',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
           ),
           const SizedBox(height: 16),
           _buildContactCard(
+            context: context,
             icon: Icons.email_outlined,
             title: 'Email Support',
             subtitle: 'support@campushub.com',
@@ -65,6 +65,7 @@ class HelpSupportScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _buildContactCard(
+            context: context,
             icon: Icons.phone_outlined,
             title: 'Phone Support',
             subtitle: '+1 (234) 567-890',
@@ -74,36 +75,41 @@ class HelpSupportScreen extends StatelessWidget {
           const SizedBox(height: 32),
 
           // FAQ Section
-          const Text(
+          Text(
             'Frequently Asked Questions',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
           ),
           const SizedBox(height: 16),
           _buildFAQItem(
+            context: context,
             question: 'How do I report a lost item?',
             answer:
                 'Navigate to the Lost & Found section from the home screen, tap the "+" button, select "Lost Item", and fill in the details about your lost item.',
           ),
           _buildFAQItem(
+            context: context,
             question: 'How do I edit my profile information?',
             answer:
                 'Go to your profile, tap on "Edit Profile" from the menu, make your changes, and tap "Save Changes".',
           ),
           _buildFAQItem(
+            context: context,
             question: 'Can I delete my posted items?',
             answer:
                 'Yes, go to "My Lost Items" or "My Found Items" from your profile, find the item you want to delete, and tap the delete icon.',
           ),
           _buildFAQItem(
+            context: context,
             question: 'How do I bookmark an event?',
             answer:
                 'Open any event from the Events section and tap the bookmark button at the bottom. You can view all bookmarked events from your profile.',
           ),
           _buildFAQItem(
+            context: context,
             question: 'How do I contact someone about a lost/found item?',
             answer:
                 'Open the item detail page and use the "CALL" or "MESSAGE" buttons to contact the person who posted the item.',
@@ -111,28 +117,30 @@ class HelpSupportScreen extends StatelessWidget {
           const SizedBox(height: 32),
 
           // App Info
-          const Text(
+          Text(
             'App Information',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
           ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.grey.shade50,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey[800]
+                  : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
               children: [
-                _buildInfoRow('Version', '1.0.0'),
+                _buildInfoRow(context, 'Version', '1.0.0'),
                 const Divider(height: 24),
-                _buildInfoRow('Last Updated', 'January 2026'),
+                _buildInfoRow(context, 'Last Updated', 'January 2026'),
                 const Divider(height: 24),
-                _buildInfoRow('Platform', 'Android, iOS'),
+                _buildInfoRow(context, 'Platform', 'Android, iOS'),
               ],
             ),
           ),
@@ -190,6 +198,7 @@ class HelpSupportScreen extends StatelessWidget {
   }
 
   Widget _buildContactCard({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String subtitle,
@@ -223,16 +232,19 @@ class HelpSupportScreen extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).textTheme.bodySmall?.color,
+                    ),
                   ),
                 ],
               ),
@@ -244,13 +256,17 @@ class HelpSupportScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFAQItem({required String question, required String answer}) {
+  Widget _buildFAQItem({
+    required BuildContext context,
+    required String question,
+    required String answer,
+  }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Theme(
         data: ThemeData(dividerColor: Colors.transparent),
@@ -259,10 +275,10 @@ class HelpSupportScreen extends StatelessWidget {
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           title: Text(
             question,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
           ),
           children: [
@@ -270,7 +286,7 @@ class HelpSupportScreen extends StatelessWidget {
               answer,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey.shade700,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
                 height: 1.5,
               ),
             ),
@@ -280,20 +296,23 @@ class HelpSupportScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(BuildContext context, String label, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+          style: TextStyle(
+            fontSize: 14,
+            color: Theme.of(context).textTheme.bodySmall?.color,
+          ),
         ),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Colors.black87,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
           ),
         ),
       ],
