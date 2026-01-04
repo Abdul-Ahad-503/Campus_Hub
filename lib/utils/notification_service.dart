@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io' show Platform;
 
 // Top-level function for background message handling
 @pragma('vm:entry-point')
@@ -18,76 +20,91 @@ class NotificationService {
 
   // Initialize FCM and local notifications
   static Future<void> initialize() async {
-    // Request permission
-    NotificationSettings settings = await _firebaseMessaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-      announcement: false,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-    );
+    // Skip FCM initialization on web platform
+    if (kIsWeb) {
+      print('FCM not supported on web, skipping initialization');
+      return;
+    }
 
-    print('Notification permission status: ${settings.authorizationStatus}');
+    try {
+      // Request permission
+      NotificationSettings settings = await _firebaseMessaging
+          .requestPermission(
+            alert: true,
+            badge: true,
+            sound: true,
+            announcement: false,
+            carPlay: false,
+            criticalAlert: false,
+            provisional: false,
+          );
 
-    // Initialize local notifications
-    const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+      print('Notification permission status: ${settings.authorizationStatus}');
 
-    const DarwinInitializationSettings iosSettings =
-        DarwinInitializationSettings(
-          requestAlertPermission: true,
-          requestBadgePermission: true,
-          requestSoundPermission: true,
+      // Initialize local notifications
+      const AndroidInitializationSettings androidSettings =
+          AndroidInitializationSettings('@mipmap/ic_launcher');
+
+      const DarwinInitializationSettings iosSettings =
+          DarwinInitializationSettings(
+            requestAlertPermission: true,
+            requestBadgePermission: true,
+            requestSoundPermission: true,
+          );
+
+      const InitializationSettings initSettings = InitializationSettings(
+        android: androidSettings,
+        iOS: iosSettings,
+      );
+
+      await _localNotifications.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: _onNotificationTap,
+      );
+
+      // Create Android notification channel (only for Android)
+      if (Platform.isAndroid) {
+        const AndroidNotificationChannel channel = AndroidNotificationChannel(
+          'campus_hub_channel',
+          'CampusHub Notifications',
+          description: 'Notifications for campus activities',
+          importance: Importance.high,
+          enableVibration: true,
+          playSound: true,
         );
 
-    const InitializationSettings initSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
+        await _localNotifications
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >()
+            ?.createNotificationChannel(channel);
+      }
 
-    await _localNotifications.initialize(
-      initSettings,
-      onDidReceiveNotificationResponse: _onNotificationTap,
-    );
+      // Handle background messages
+      FirebaseMessaging.onBackgroundMessage(
+        _firebaseMessagingBackgroundHandler,
+      );
 
-    // Create Android notification channel
-    const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'campus_hub_channel',
-      'CampusHub Notifications',
-      description: 'Notifications for campus activities',
-      importance: Importance.high,
-      enableVibration: true,
-      playSound: true,
-    );
+      // Handle foreground messages
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        print('Foreground message received: ${message.messageId}');
+        _showLocalNotification(message);
+      });
 
-    await _localNotifications
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.createNotificationChannel(channel);
+      // Handle notification tap when app is in background
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        print('Notification tapped: ${message.messageId}');
+        _handleNotificationTap(message.data);
+      });
 
-    // Handle background messages
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      // Get and save FCM token
+      await _saveFCMToken();
 
-    // Handle foreground messages
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Foreground message received: ${message.messageId}');
-      _showLocalNotification(message);
-    });
-
-    // Handle notification tap when app is in background
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Notification tapped: ${message.messageId}');
-      _handleNotificationTap(message.data);
-    });
-
-    // Get and save FCM token
-    await _saveFCMToken();
-
-    // Listen for token refresh
-    _firebaseMessaging.onTokenRefresh.listen(_saveFCMToken);
+      // Listen for token refresh
+      _firebaseMessaging.onTokenRefresh.listen(_saveFCMToken);
+    } catch (e) {
+      print('Error initializing notifications: $e');
+    }
   }
 
   // Save FCM token to Firestore
