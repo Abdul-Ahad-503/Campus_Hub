@@ -7,8 +7,7 @@ class ItemDetailScreen extends StatelessWidget {
   final Map<String, dynamic> item;
   final bool isLost;
 
-  const ItemDetailScreen({Key? key, required this.item, required this.isLost})
-    : super(key: key);
+  const ItemDetailScreen({super.key, required this.item, required this.isLost});
 
   Future<void> _makePhoneCall(String phoneNumber) async {
     final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);

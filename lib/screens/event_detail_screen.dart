@@ -5,7 +5,7 @@ import 'dart:convert';
 class EventDetailScreen extends StatelessWidget {
   final Map<String, dynamic> event;
 
-  const EventDetailScreen({Key? key, required this.event}) : super(key: key);
+  const EventDetailScreen({super.key, required this.event});
 
   Color _getCategoryColor(String category) {
     switch (category.toUpperCase()) {

@@ -5,7 +5,7 @@ import 'dart:convert';
 import '../item_detail_screen.dart';
 
 class MyFoundItemsScreen extends StatelessWidget {
-  const MyFoundItemsScreen({Key? key}) : super(key: key);
+  const MyFoundItemsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

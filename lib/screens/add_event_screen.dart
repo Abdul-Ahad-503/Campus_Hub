@@ -8,7 +8,7 @@ import 'dart:convert';
 import '../utils/notification_service.dart';
 
 class AddEventScreen extends StatefulWidget {
-  const AddEventScreen({Key? key}) : super(key: key);
+  const AddEventScreen({super.key});
 
   @override
   State<AddEventScreen> createState() => _AddEventScreenState();
