@@ -59,7 +59,7 @@ class HelpSupportScreen extends StatelessWidget {
             context: context,
             icon: Icons.email_outlined,
             title: 'Email Support',
-            subtitle: 'support@campushub.com',
+            subtitle: 'abdulahad503456@gmail.com',
             color: const Color(0xFF2196F3),
             onTap: _launchEmail,
           ),
@@ -68,7 +68,7 @@ class HelpSupportScreen extends StatelessWidget {
             context: context,
             icon: Icons.phone_outlined,
             title: 'Phone Support',
-            subtitle: '+1 (234) 567-890',
+            subtitle: '+92 322 7510915',
             color: const Color(0xFF4CAF50),
             onTap: _launchPhone,
           ),
@@ -156,7 +156,7 @@ class HelpSupportScreen extends StatelessWidget {
                   builder: (context) => AlertDialog(
                     title: const Text('Report a Bug'),
                     content: const Text(
-                      'Please email us at support@campushub.com with details about the bug you encountered.',
+                      'Please email us at abdulahad503456@gmail.com with details about the bug you encountered.',
                     ),
                     actions: [
                       TextButton(
