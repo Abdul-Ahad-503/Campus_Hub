@@ -446,7 +446,9 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
                     width: double.infinity,
                     height: 150,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).cardTheme.color,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[800]
+                          : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: _selectedImage == null
@@ -626,7 +628,9 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
                       vertical: 16,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[800]
+                          : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -788,10 +792,10 @@ class _PostFoundItemScreenState extends State<PostFoundItemScreen> {
     return RichText(
       text: TextSpan(
         text: text,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          color: Colors.black87,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
         ),
         children: [
           if (isRequired)

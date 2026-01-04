@@ -464,12 +464,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
           padding: const EdgeInsets.all(20),
           children: [
             // Category Selection
-            const Text(
+            Text(
               'Category',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
             const SizedBox(height: 12),
@@ -516,12 +516,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
             const SizedBox(height: 24),
 
             // Society Name Field
-            const Text(
+            Text(
               'Society Name',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
             const SizedBox(height: 8),
@@ -563,12 +563,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
             const SizedBox(height: 20),
 
             // Title Field
-            const Text(
+            Text(
               'Event Title',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
             const SizedBox(height: 8),
@@ -610,12 +610,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
             const SizedBox(height: 20),
 
             // Description Field
-            const Text(
+            Text(
               'Description',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
             const SizedBox(height: 8),
@@ -655,12 +655,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
             const SizedBox(height: 20),
 
             // Event Date Field
-            const Text(
+            Text(
               'Event Date',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
             const SizedBox(height: 8),
@@ -672,7 +672,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   vertical: 14,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey[800]
+                      : Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.grey.shade300),
                 ),
@@ -702,12 +704,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
             const SizedBox(height: 20),
 
             // Image Picker
-            const Text(
+            Text(
               'Event Image (Optional)',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
             const SizedBox(height: 8),
@@ -716,7 +718,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
               child: Container(
                 height: 200,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey[800]
+                      : Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: Colors.grey.shade300,

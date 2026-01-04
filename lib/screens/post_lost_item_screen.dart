@@ -435,7 +435,9 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
                     width: double.infinity,
                     height: 150,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).cardTheme.color,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[800]
+                          : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: Theme.of(context).dividerColor,
@@ -605,7 +607,9 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
                       vertical: 16,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[800]
+                          : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -767,10 +771,10 @@ class _PostLostItemScreenState extends State<PostLostItemScreen> {
     return RichText(
       text: TextSpan(
         text: text,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          color: Colors.black87,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
         ),
         children: [
           if (isRequired)
