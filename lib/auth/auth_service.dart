@@ -29,7 +29,7 @@ class AuthService {
       if (user != null) {
         // Get FCM token
         final fcmToken = await FirebaseMessaging.instance.getToken();
-        
+
         // Store additional user data in Firestore
         await _firestore.collection('users').doc(user.uid).set({
           'uid': user.uid,
@@ -90,6 +90,10 @@ class AuthService {
   }) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
       // Update FCM token on login
       if (result.user != null) {
         final fcmToken = await FirebaseMessaging.instance.getToken();
@@ -98,10 +102,6 @@ class AuthService {
           'lastLogin': FieldValue.serverTimestamp(),
         });
       }
-
-        email: email,
-        password: password,
-      );
 
       return {
         'success': true,
